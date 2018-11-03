@@ -36,18 +36,6 @@ class BooksApp extends React.Component {
     )
   }
 
-  componentDidMount() {
-    BooksAPI.getAll().then(
-      (books) => {
-        this.setState(() => ({
-          currentlyReading: books.filter((book) => (book.shelf === 'currentlyReading')),
-          wantToRead: books.filter((book) => (book.shelf === 'wantToRead')),
-          read: books.filter((book) => (book.shelf === 'read')),
-        }))
-      }
-    )
-  }
-
   move(bookId, origin, destination) {
     var source = origin !== 'none' ? origin : 'searchBooks'
     this.setState(() => ({
@@ -69,15 +57,47 @@ class BooksApp extends React.Component {
     return 'none'
   }
 
+  componentDidMount() {
+    BooksAPI.getAll().then(
+      (books) => {
+        this.setState(() => ({
+          currentlyReading: books.filter((book) => (book.shelf === 'currentlyReading')),
+          wantToRead: books.filter((book) => (book.shelf === 'wantToRead')),
+          read: books.filter((book) => (book.shelf === 'read')),
+        }))
+      }
+    )
+  }
+
   render() {
     return (
       <div className="app">
+        {/* Front page*/}
+        <Route exact path='/' render={() => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
+            </div>
+            <div className="list-books-content">
+              <div>
+                <Shelf key='currentlyReading' title="Current Reading" shelfId="currentlyReading" books={this.state.currentlyReading} moveCallback={this.move.bind(this)} />
+                <Shelf key='wantToRead' title="Want to Read" shelfId="wantToRead" books={this.state.wantToRead} moveCallback={this.move.bind(this)} />
+                <Shelf key='read' title="Read" shelfId="read" books={this.state.read} moveCallback={this.move.bind(this)} />
+              </div>
+            </div>
+            <div className="open-search">
+              <Link
+                to='/search'>
+                  Add a book
+              </Link>
+            </div>
+          </div>
+        )}/>
+        {/* Search page*/}
         <Route exact path='/search' render={() => (
           <div className="search-books">
             <div className="search-books-bar">
-              <Link
-                className="close-search"
-                to='/'>
+              <Link className="close-search" to='/'>
                   Add a book
               </Link>
               <div className="search-books-input-wrapper">
@@ -99,7 +119,7 @@ class BooksApp extends React.Component {
                   this.state.searchBooks.map(
                     (book) => (
                       <li key={book.id}>
-                        <Book book={book} moveCallback={this.move.bind(this)} shelf={book.shelf || this.getBookShelf(book.id)} />
+                        <Book book={book} moveCallback={this.move.bind(this)} shelf={this.getBookShelf(book.id)} />
                       </li>
                     )
                   )
@@ -107,28 +127,7 @@ class BooksApp extends React.Component {
               </ol>
             </div>
           </div>
-      )}/>
-      <Route exact path='/' render={() => (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <div>
-              <Shelf key='currentlyReading' title="Current Reading" shelfId="currentlyReading" books={this.state.currentlyReading} moveCallback={this.move.bind(this)} />
-              <Shelf key='wantToRead' title="Want to Read" shelfId="wantToRead" books={this.state.wantToRead} moveCallback={this.move.bind(this)} />
-              <Shelf key='read' title="Read" shelfId="read" books={this.state.read} moveCallback={this.move.bind(this)} />
-            </div>
-          </div>
-          <div className="open-search">
-            <Link
-              to='/search'>
-                Add a book
-            </Link>
-          </div>
-        </div>
-      )}/>
-
+        )}/>
       </div>
     )
   }
