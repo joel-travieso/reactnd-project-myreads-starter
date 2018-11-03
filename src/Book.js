@@ -2,19 +2,18 @@ import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 
 class Book extends Component {
-  moveTo(shelf) {
-    BooksAPI.update(this.props.book, shelf).then(
-      // this.props.parentUpdate()
+  moveTo(destinationShelf) {
+    BooksAPI.update(this.props.book, destinationShelf).then(
+      this.props.moveCallback(this.props.book.id, this.props.shelf || 'none', destinationShelf)
     )
   }
   render() {
     return (
-      <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.smallThumbnail})` }}></div>
+            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks && this.props.book.imageLinks.smallThumbnail})` }}></div>
             <div className="book-shelf-changer">
-              <select onChange={(e) => {this.moveTo(e.target.value)}}>
+              <select onChange={(e) => {this.moveTo(e.target.value)}} value={this.props.shelf || 'none'}>
                 <option value="move" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
@@ -24,11 +23,10 @@ class Book extends Component {
             </div>
           </div>
           <div className="book-title">{this.props.book.title}</div>
-          {this.props.book.authors.map((author) => (
+          {this.props.book.authors && this.props.book.authors.map((author) => (
             <div key={author} className="book-authors">{author}</div>
           ))}
         </div>
-      </li>
     )
   }
 }
