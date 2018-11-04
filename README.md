@@ -5,7 +5,7 @@ This is the final assessment project for Udacity's React Fundamentals course. Th
 ## How it works
 To change the place of a book, use the little widget in its bottom-right corner. To transfer books between shelfs, pick the destination shelf among the available options. To remove completely a book from all shelfs use the option 'None'.
 
-Additionally, it is possible to add new books to any shelf by going to the search page through the 'Add a Book' link at the bottom-right of the page, entering some search keywords in the form and using the book widget to choose a destination shelf.
+Additionally, it is possible to add new books to any shelf by going to the search page through the 'Add a Book' link at the bottom-right of the page, entering some search keywords in the form and using the book widget in any of the results to choose a destination shelf.
 
 ## Getting Started
 
